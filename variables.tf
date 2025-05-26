@@ -101,6 +101,12 @@ variable "service_namespace_url" {
 ###############################################################################
 #                               record variables                              #
 ###############################################################################
+variable "enable_dynamic_recordset_names" {
+  type        = bool
+  description = "Enables dynamic recordset names that are not availble during plan to be provisioned."
+  default     = false
+}
+
 
 variable "recordsets" {
   type = list(object({

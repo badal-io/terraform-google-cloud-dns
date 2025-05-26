@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+locals {
+  recordset = { for idx, record in var.recordsets : join("/", [var.enable_dynamic_recordset_names ? idx : record.name, record.type]) => record }
+}
+
 resource "google_dns_managed_zone" "peering" {
   count         = var.type == "peering" ? 1 : 0
   project       = var.project_id
@@ -195,7 +199,7 @@ resource "google_dns_record_set" "cloud-static-records" {
   project      = var.project_id
   managed_zone = var.name
 
-  for_each = { for record in var.recordsets : join("/", [record.name, record.type]) => record }
+  for_each = local.recordset
   name = (
     each.value.name != "" ?
     "${each.value.name}.${var.domain}" :
